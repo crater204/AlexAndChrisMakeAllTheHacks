@@ -32,4 +32,11 @@ function indexController($rootScope, $scope, socket, toast)
             alert('Please enter a Username');
         }
     };
+
+    this.getMessagesFrom = function(user)
+    {
+        socket.emit("/api:getMessages",{"userID":"1","who":user},function(){
+
+        });
+    };
 }

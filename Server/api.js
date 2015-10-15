@@ -16,6 +16,10 @@ module.exports = function (io)
             callback("It worked");
         });
 
+        socket.on('/api:login', function(data, callback){
+
+        });
+
         socket.on('/api:send', function (data, callback)
         {
             console.dir(data);
@@ -24,5 +28,10 @@ module.exports = function (io)
                 callback("Message Sent");
             }
         });
+
+        socket.on('/api:getMessages', function(data, callback){
+            test=data.who;
+            console.log(test);
+        })
     });
 }
