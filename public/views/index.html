@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <meta charset="UTF-8">
+        <title>Chat Server</title>
+        <script src="/js/app.js"></script>
+        <script src="/js/index.controller.js"></script>
+        <script src="/js/services.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <link rel="stylesheet" href="/css/style.css"/>
+    </head>
+    <body ng-app="chatApp" ng-controller="IndexCtrl as index">
+        <div id="header">
+            <div id="userdata">
+                Username:
+                <input type="text" ng-model="username" placeholder="Enter a Username"/>
+            </div>
+        </div>
+
+        <div class="center">Hi Nora</div>
+
+        <div id="contentPanel" class="alert">
+            <div class="message">
+
+            </div>
+            <div id="messageBar">
+                <textarea ng-model="message"></textarea>
+                <input id="sendButton" type="button" value="Send" ng-click="index.send()">
+            </div>
+        </div>
+
+    </body>
+</html>

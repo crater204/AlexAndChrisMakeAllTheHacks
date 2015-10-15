@@ -1,0 +1,69 @@
+.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.centerHoriz {
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.centerVert {
+    top: 50%;
+    transform: translate(0%, -50%);
+}
+
+.messageLeft {
+
+}
+
+.messageLeft {
+
+}
+
+#header {
+    position: absolute;
+    width: 100%;
+    height: 10%;
+    border-bottom: solid;
+    border-width: thin;
+    border-color: lightgray;
+}
+
+#userdata {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+}
+
+#contentPanel {
+    position: absolute;
+    top: 12%;
+    left: 1%;
+    width: 98%;
+    bottom: 1%;
+    border: solid;
+    border-width: thin;
+    border-color: lightcoral;
+}
+
+#messageBar {
+    position:absolute;
+    left:2%;
+    right: 3%;
+    bottom: 1%;
+    padding: 1%;
+    background-color: green;
+}
+
+#sendButton {
+    position: absolute;
+    right: 3%;
+}
+
+#messageText{
+    position: absolute;
+    left: 3%;
+}
