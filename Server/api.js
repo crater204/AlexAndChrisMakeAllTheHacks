@@ -35,9 +35,36 @@ module.exports = function (io)
             callback("It worked");
         });
 
+        /**
+         *  @param data.user <string> = the new username
+         *  @param data.pass <string> = the new password
+         *
+         *  @return
+         *
+         *  Purpose: To create a new user
+         */
+        socket.on('/api:createUser', function (data, callback)
+        {
+            if (!data.user && !data.pass)
+            {
+                sql.query('INSERT INTO users (username, password) value (?,?)', [data.user, data.pass], function (err, sqlData)
+                {
+                    if (!err)
+                    {
+                        callback(sqlData);
+                    }
+                    else
+                    {
+                        console.error(err);
+                        callback(500);
+                    }
+                });
+            }
+        });
+
         socket.on('/api:login', function (data, callback)
         {
-
+            console.dir(data);
         });
 
         socket.on('/api:send', function (data, callback)
