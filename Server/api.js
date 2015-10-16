@@ -67,11 +67,11 @@ module.exports = function (io)
                 console.dir(sqlData);
                 if (!err)
                 {
-                    console.error(err);
                     callback(sqlData);
                 }
                 else
                 {
+                    console.error(err);
                     callback(500);
                 }
             });
