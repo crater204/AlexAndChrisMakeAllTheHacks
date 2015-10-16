@@ -49,22 +49,29 @@ module.exports = function (io)
             }
         });
 
+        /**
+         *  @param data.userID <int> = [SQL receiver_id value] logged in user
+         *  @param data.who <string> = [SQL sent_from value] sender username
+         *
+         *  @return sqlData <object>{message<string>,time_sent<timestamp>} = message with timestamp
+         *      or
+         *  @return error <int> = '500 internal server error'
+         *
+         *  Purpose: retrieve all messages from a specific sender
+         */
         socket.on('/api:getMessages', function (data, callback)
         {
-            console.dir(data);
-            queryStr = '';
-            queryParams = [];
+            //console.dir(data);
+            queryStr = 'SELECT message, time_sent FROM messages WHERE receiver_id=?';
+            queryParams = [data.userID];
             if (data.who !== '*')
             {
-                queryStr = 'SELECT message, time_sent FROM messages WHERE receiver_id=? AND sent_from=?';
-                queryParams =  [data.userID,data.who];
-            } else{
-                queryStr = 'SELECT message, time_sent FROM messages WHERE receiver_id=?';
-                queryParams =  [data.userID];
+                queryStr += ' AND sent_from=?';
+                queryParams.push(data.who);
             }
             sql.query(queryStr, queryParams, function (err, sqlData)
             {
-                console.dir(sqlData);
+                //console.dir(sqlData);
                 if (!err)
                 {
                     callback(sqlData);
