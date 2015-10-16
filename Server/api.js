@@ -2,7 +2,26 @@
  * Created by Alex on 9/29/2015.
  */
 
-var sql = require('mysql');
+var mysql = require('mysql');
+
+var sql = mysql.createConnection({
+    host: 'localhost',
+    user: 'chatAdmin',
+    password: 'chatpass',
+    database: 'chatserver'
+});
+
+sql.connect(function (err)
+{
+    if (!err)
+    {
+        console.log('Database connected.');
+    }
+    else
+    {
+        console.error('Database connection error\n\n');
+    }
+});
 
 module.exports = function (io)
 {
@@ -16,7 +35,8 @@ module.exports = function (io)
             callback("It worked");
         });
 
-        socket.on('/api:login', function(data, callback){
+        socket.on('/api:login', function (data, callback)
+        {
 
         });
 
@@ -29,9 +49,32 @@ module.exports = function (io)
             }
         });
 
-        socket.on('/api:getMessages', function(data, callback){
-            test=data.who;
-            console.log(test);
+        socket.on('/api:getMessages', function (data, callback)
+        {
+            console.dir(data);
+            queryStr = '';
+            queryParams = [];
+            if (data.who !== '*')
+            {
+                queryStr = 'SELECT message, time_sent FROM messages WHERE receiver_id=? AND sent_from=?';
+                queryParams =  [data.userID,data.who];
+            } else{
+                queryStr = 'SELECT message, time_sent FROM messages WHERE receiver_id=?';
+                queryParams =  [data.userID];
+            }
+            sql.query(queryStr, queryParams, function (err, sqlData)
+            {
+                console.dir(sqlData);
+                if (!err)
+                {
+                    console.error(err);
+                    callback(sqlData);
+                }
+                else
+                {
+                    callback(500);
+                }
+            });
         })
     });
 }
