@@ -33,10 +33,19 @@ function indexController($rootScope, $scope, socket, toast)
         }
     };
 
-    this.getMessagesFrom = function(sender)
+    this.getMessagesFrom = function (sender)
     {
-        socket.emit("/api:getMessages",{"userID":"2","who":sender},function(data){
+        socket.emit("/api:getMessages", {"userID": "2", "who": sender}, function (data)
+        {
             toast.message(data);
+        });
+    };
+
+    this.createUser = function ()
+    {
+        socket.emit('/api:createUser', {"user": "test5", "pass": "****"}, function (reply)
+        {
+            console.log(reply);
         });
     };
 }

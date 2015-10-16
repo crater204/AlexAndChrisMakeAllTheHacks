@@ -39,26 +39,40 @@ module.exports = function (io)
          *  @param data.user <string> = the new username
          *  @param data.pass <string> = the new password
          *
-         *  @return
+         *  @return 200 : OK
+         *          400 : Bad Request: Username or password are null
+         *          409 : Conflict: Username already exists (can't be duplicated)
+         *          500 : Server Error: See Stacktrace
          *
          *  Purpose: To create a new user
          */
         socket.on('/api:createUser', function (data, callback)
         {
-            if (!data.user && !data.pass)
+            //console.dir(data);
+            if (data.user && data.pass)
             {
                 sql.query('INSERT INTO users (username, password) value (?,?)', [data.user, data.pass], function (err, sqlData)
                 {
                     if (!err)
                     {
-                        callback(sqlData);
+                        //console.dir(sqlData);
+                        callback(200);
                     }
                     else
                     {
                         console.error(err);
-                        callback(500);
+                        if (err.code === "ER_DUP_ENTRY")
+                        {
+                            callback(409);
+                        }else{
+                            callback(500)
+                        }
                     }
                 });
+            }
+            else
+            {
+                callback(400);
             }
         });
 
@@ -72,7 +86,7 @@ module.exports = function (io)
             console.dir(data);
             if (callback)
             {
-                callback("Message Sent");
+                callback(200);
             }
         });
 
