@@ -3,13 +3,9 @@
  */
 
 var mysql = require('mysql');
+var sqlLogin = require('./SQLData.js');
 
-var sql = mysql.createConnection({
-    host: 'localhost',
-    user: 'chatAdmin',
-    password: 'chatpass',
-    database: 'chatserver'
-});
+var sql = mysql.createConnection(sqlLogin);
 
 sql.connect(function (err)
 {
@@ -125,4 +121,8 @@ module.exports = function (io)
             });
         })
     });
-}
+    io.on('disconnect',function()
+    {
+        console.log('User disconnected');
+    });
+};
