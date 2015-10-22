@@ -19,7 +19,7 @@ sql.connect(function (err)
     }
 });
 
-var
+//var
 
 module.exports = function (io)
 {
@@ -102,15 +102,15 @@ module.exports = function (io)
                         if (jsonData[0].password === data.password)
                         {
                             //success
-                            callback(200);
+                            callback({'status':200,'userID':jsonData.id});
                         }else
                         {
                             //not right password
-                            callback(401);
+                            callback({'status':401});
                         }
                     }else{
                         //server error (too many same usernames)
-                        callback(500);
+                        callback({'status':500});
                     }
                 }else{
                     console.error(err);
