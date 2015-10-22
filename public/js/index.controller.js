@@ -48,4 +48,18 @@ function indexController($rootScope, $scope, socket, toast)
             console.log(reply);
         });
     };
+
+    this.login = function ()
+    {
+        if ($scope.username && $scope.password && $scope.username !== "" && $scope.password !== "")
+        {
+            socket.emit("/api:login",{"username":$scope.username,"password":$scope.password}, function(data){
+               console.dir(data);
+            });
+        }
+        else
+        {
+            alert('Please enter a username and password.');
+        }
+    }
 }

@@ -60,7 +60,9 @@ module.exports = function (io)
                         if (err.code === "ER_DUP_ENTRY")
                         {
                             callback(409);
-                        }else{
+                        }
+                        else
+                        {
                             callback(500)
                         }
                     }
@@ -72,9 +74,43 @@ module.exports = function (io)
             }
         });
 
+        /**
+         * @param data.username <string> = username of the user
+         * @param data.password <string> = password of the user
+         *
+         * @return
+         *          200: successful login
+         *          401: incorrect username or password
+         *          500: internal server error - multiple matching usernames
+         *
+         * Purpose: Allow user to login with their username and password
+         */
         socket.on('/api:login', function (data, callback)
         {
             console.dir(data);
+            sql.query('SELECT password FROM users WHERE username = ?', [data.username], function (err, jsonData)
+            {
+                if (!err)
+                {
+                    if (jsonData.length === 1)
+                    {
+                        if (jsonData[0].password === data.password)
+                        {
+                            //success
+                            callback(200);
+                        }else
+                        {
+                            //not right password
+                            callback(401);
+                        }
+                    }else{
+                        //server error (too many same usernames)
+                        callback(500);
+                    }
+                }else{
+                    console.error(err);
+                }
+            });
         });
 
         socket.on('/api:send', function (data, callback)
@@ -119,10 +155,14 @@ module.exports = function (io)
                     callback(500);
                 }
             });
-        })
-    });
-    io.on('disconnect',function()
-    {
-        console.log('User disconnected');
+        });
+
+        /**
+         * Purpose: Warn that connection has been closed
+         */
+        socket.on('disconnect', function ()
+        {
+            console.log('User disconnected from: ' + socket.handshake.address);
+        });
     });
 };
