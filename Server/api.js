@@ -19,6 +19,8 @@ sql.connect(function (err)
     }
 });
 
+var
+
 module.exports = function (io)
 {
     io.on('connection', function (socket)
@@ -122,7 +124,7 @@ module.exports = function (io)
          * Purpose: Give a list of all usernames to the client
          */
         socket.on('/api:getUsers', function(data, callback){
-            sql.query('SELECT username FROM users',[], function(err, jsonData){
+            sql.query('SELECT username, id FROM users',[], function(err, jsonData){
                 callback(jsonData);
             });
         });
