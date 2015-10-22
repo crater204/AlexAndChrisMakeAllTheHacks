@@ -61,5 +61,12 @@ function indexController($rootScope, $scope, socket, toast)
         {
             alert('Please enter a username and password.');
         }
-    }
+    };
+
+    this.getUsers = function()
+    {
+        socket.emit('/api:getUsers',null, function(data){
+            console.log(data);
+        });
+    };
 }

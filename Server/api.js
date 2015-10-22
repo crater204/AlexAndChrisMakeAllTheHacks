@@ -25,6 +25,9 @@ module.exports = function (io)
     {
         console.log('Connected to: ' + socket.handshake.address);
 
+        /**
+         * Purpose: test socket connection
+         */
         socket.on('/api:test', function (data, callback)
         {
             console.log(socket.id + " : " + data);
@@ -110,6 +113,17 @@ module.exports = function (io)
                 }else{
                     console.error(err);
                 }
+            });
+        });
+
+        /**
+         * @return username<array>
+         *
+         * Purpose: Give a list of all usernames to the client
+         */
+        socket.on('/api:getUsers', function(data, callback){
+            sql.query('SELECT username FROM users',[], function(err, jsonData){
+                callback(jsonData);
             });
         });
 
