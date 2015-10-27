@@ -104,7 +104,7 @@ module.exports = function (io)
         socket.on('/api:login', function (data, callback)
         {
             console.dir(data);
-            sql.query('SELECT password FROM users WHERE username = ?', [data.username], function (err, jsonData)
+            sql.query('SELECT username,id,password FROM users WHERE username = ?', [data.username], function (err, jsonData)
             {
                 if (!err)
                 {
@@ -112,16 +112,15 @@ module.exports = function (io)
                     {
                         if (jsonData[0].password === data.password)
                         {
-                            //success
-                            signedIn.push(user(jsonData.id, socket.handshake.address));
-                            console.dir(signedIn);
                             //remove the users from viewing array and add them to the user array
                             if ((index = viewing.indexOf(socket))>-1)
                             {
                                 viewing.splice(index,1);
                             }
-                            signedIn.push(user(jsonData.id,socket));
-                            callback({'status': 200, 'userID': jsonData.id});
+                            //sign users in
+                            signedIn.push(user(jsonData[0].id,socket));
+                            callback({'status': 200, 'userID': jsonData[0].id, 'username':jsonData[0].username});
+                            console.log(signedIn);
                         }
                         else
                         {
