@@ -19,15 +19,17 @@ sql.connect(function (err)
     }
 });
 
-var user = function (id, ip)
+var user = function (id, socket)
 {
     return {
         'id': id,
-        'ip': ip
+        'socket': socket
     };
 };
 
+//an array of sockets addresses that are not logged in
 var viewing = [];
+//array of USER objects that are signed in
 var signedIn = [];
 
 module.exports = function (io)
@@ -35,6 +37,7 @@ module.exports = function (io)
     io.on('connection', function (socket)
     {
         console.log('Connected to: ' + socket.handshake.address);
+        viewing.push(socket);
 
         /**
          * Purpose: test socket connection
@@ -112,6 +115,12 @@ module.exports = function (io)
                             //success
                             signedIn.push(user(jsonData.id, socket.handshake.address));
                             console.dir(signedIn);
+                            //remove the users from viewing array and add them to the user array
+                            if ((index = viewing.indexOf(socket))>-1)
+                            {
+                                viewing.splice(index,1);
+                            }
+                            signedIn.push(user(jsonData.id,socket));
                             callback({'status': 200, 'userID': jsonData.id});
                         }
                         else
@@ -196,6 +205,12 @@ module.exports = function (io)
         socket.on('disconnect', function ()
         {
             console.log('User disconnected from: ' + socket.handshake.address);
+            var index = viewing.indexOf(socket);
+            console.log(index);
+            if (index > -1)
+            {
+                viewing.splice(index,1);
+            }
         });
     });
 };
