@@ -19,7 +19,16 @@ sql.connect(function (err)
     }
 });
 
-//var
+var user = function (id, ip)
+{
+    return {
+        'id': id,
+        'ip': ip
+    };
+};
+
+var viewing = [];
+var signedIn = [];
 
 module.exports = function (io)
 {
@@ -83,8 +92,7 @@ module.exports = function (io)
          * @param data.username <string> = username of the user
          * @param data.password <string> = password of the user
          *
-         * @return
-         *          200: successful login
+         * @return  200: successful login
          *          401: incorrect username or password
          *          500: internal server error - multiple matching usernames
          *
@@ -102,17 +110,24 @@ module.exports = function (io)
                         if (jsonData[0].password === data.password)
                         {
                             //success
-                            callback({'status':200,'userID':jsonData.id});
-                        }else
+                            signedIn.push(user(jsonData.id, socket.handshake.address));
+                            console.dir(signedIn);
+                            callback({'status': 200, 'userID': jsonData.id});
+                        }
+                        else
                         {
                             //not right password
-                            callback({'status':401});
+                            callback({'status': 401});
                         }
-                    }else{
-                        //server error (too many same usernames)
-                        callback({'status':500});
                     }
-                }else{
+                    else
+                    {
+                        //server error (too many same usernames)
+                        callback({'status': 500});
+                    }
+                }
+                else
+                {
                     console.error(err);
                 }
             });
@@ -123,8 +138,10 @@ module.exports = function (io)
          *
          * Purpose: Give a list of all usernames to the client
          */
-        socket.on('/api:getUsers', function(data, callback){
-            sql.query('SELECT username, id FROM users',[], function(err, jsonData){
+        socket.on('/api:getUsers', function (data, callback)
+        {
+            sql.query('SELECT username, id FROM users', [], function (err, jsonData)
+            {
                 callback(jsonData);
             });
         });
